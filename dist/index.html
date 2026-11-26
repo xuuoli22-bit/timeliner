@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="在连续日历中安排每天的事项，按类型、项目或人员查看。">
+  <meta name="theme-color" content="#ffffff">
+  <title>时间格 · 项目月历</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" type="module"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="sidebar">
+      <div class="brand"><span class="brand-mark" data-icon="logo"></span><span>时间格</span></div>
+      <nav class="sidebar-nav" aria-label="工作台">
+        <button class="nav-button calendar-nav" id="calendar-nav" type="button"><span data-icon="calendar"></span><span>月历</span></button>
+        <div class="sidebar-section">
+          <p class="sidebar-label">管理</p>
+          <button class="nav-button" id="manage-projects" type="button"><span data-icon="folder"></span><span>项目</span></button>
+          <button class="nav-button" id="manage-types" type="button"><span data-icon="tag"></span><span>事项类型</span></button>
+          <button class="nav-button" id="manage-people" type="button"><span data-icon="users"></span><span>人员</span></button>
+        </div>
+        <div class="sidebar-section project-shortcuts" id="project-shortcuts"></div>
+      </nav>
+      <div id="storage-status" class="storage-status"></div>
+    </header>
+
+    <main class="workspace" id="workspace">
+      <section class="overview" aria-labelledby="page-title">
+        <div>
+          <h1 id="page-title">项目月历</h1>
+          <div id="workspace-summary" class="workspace-summary"></div>
+        </div>
+        <div class="overview-actions">
+          <div class="segmented appearance-tabs" role="group" aria-label="页面风格">
+            <button type="button" data-appearance="minimal" aria-pressed="true"><span data-icon="grid"></span>简洁</button>
+            <button type="button" data-appearance="handwritten" aria-pressed="false"><span data-icon="pen"></span>手写</button>
+          </div>
+          <div class="select-wrap filter-control font-control" id="handwriting-font-control" hidden>
+            <span class="filter-icon" aria-hidden="true">字体</span>
+            <select id="handwriting-font" aria-label="手写字体">
+              <option value="yozai">悠哉细体</option>
+              <option value="wenkai">霞鹜文楷轻体</option>
+              <option value="xiaolai">小赖字体</option>
+            </select>
+          </div>
+          <button id="new-item" class="button primary" type="button"><span data-icon="plus"></span>新建事项</button>
+        </div>
+      </section>
+
+      <section class="timeline" aria-label="月历时间线">
+        <div class="month-controls">
+          <div class="month-nav">
+            <h2 id="month-title" aria-live="polite"></h2>
+            <div class="arrows">
+              <button id="prev-month" class="icon-button" type="button" aria-label="上个月"><span data-icon="left"></span></button>
+              <button id="next-month" class="icon-button" type="button" aria-label="下个月"><span data-icon="right"></span></button>
+            </div>
+            <button id="today" class="button today-button" type="button">今天</button>
+          </div>
+          <div id="progress" class="progress-panel"></div>
+        </div>
+        <div class="view-controls">
+          <div class="view-left">
+            <div class="segmented view-tabs" role="group" aria-label="查看维度">
+              <button type="button" data-axis="project" aria-pressed="true"><span data-icon="grid"></span>按项目</button>
+              <button type="button" data-axis="person" aria-pressed="false"><span data-icon="users"></span>按人员</button>
+            </div>
+            <div class="select-wrap filter-control scope-wrap">
+              <span id="scope-icon" class="filter-icon" aria-hidden="true"></span>
+              <select id="scope" aria-label="筛选项目或业务"></select>
+            </div>
+            <div class="select-wrap filter-control type-wrap">
+              <span data-icon="tag" class="filter-icon"></span>
+              <select id="type-filter" aria-label="筛选事项类型"></select>
+            </div>
+          </div>
+          <div class="segmented layout-tabs" role="group" aria-label="合并或分组">
+            <button type="button" data-layout="merged" aria-pressed="true"><span data-icon="columns"></span>合并</button>
+            <button type="button" data-layout="grouped" aria-pressed="false"><span data-icon="rows"></span>分组</button>
+          </div>
+        </div>
+        <div id="board-scroll" class="board-scroll" role="region" tabindex="0" aria-label="连续日历，上下滚动跨月查看">
+          <div id="board" class="board">
+            <div id="calendar-weekdays" class="board-row week-heading"></div>
+            <div id="calendar-pages"></div>
+          </div>
+        </div>
+        <div class="board-footer">
+          <span class="pointer-help"><span data-icon="move"></span>上下滚动查看相邻月份 · 拖动事项改期</span>
+          <span class="touch-help">上下滑动跨月查看 · 左右滑动查看星期</span>
+          <span class="footer-storage" id="footer-storage"></span>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="editor" class="editor" aria-labelledby="dialog-title">
+    <div id="editor-content"></div>
+  </dialog>
+  <dialog id="copy-editor" class="editor" aria-labelledby="copy-title"></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>
